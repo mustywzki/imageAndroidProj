@@ -50,6 +50,7 @@ public class    MainActivity extends AppCompatActivity {
         // User Interface Initialization
         buttonslayout = findViewById(R.id.buttonsLayout);
         button_slide = View.inflate(this,R.layout.buttons_scroller,null);
+        slider_bars = View.inflate(this,R.layout.option_sliders,null);
         buttonslayout.addView(button_slide);
 
         //// Text Setup
@@ -166,5 +167,9 @@ public class    MainActivity extends AppCompatActivity {
                 break;
         }
         applyProcessings();
+
+        //Change layout:
+        buttonslayout.removeAllViews();
+        buttonslayout.addView(slider_bars);
     }
 }
