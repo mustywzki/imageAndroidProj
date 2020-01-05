@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">imageAndroidProj</string>
     <string name="toGray_string">Grayscale</string>
-    <string name="colorize_string">Colorize</string>
+    <string name="chromaKey_string">Chroma Key</string>
     <string name="hue_string">Hue</string>
+    <string name="Back">Back</string>
+    <string name="convolution_string">Convolution</string>
 </resources>

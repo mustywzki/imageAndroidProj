@@ -19,7 +19,9 @@ public class    MainActivity extends AppCompatActivity {
 
     private enum Processing_type {
         GRAY,
-        HUE
+        HUE,
+        KEEP_COLOR,
+        CONVOLUTION
     }
 
     private Processing_type currentProcessing;
@@ -122,6 +124,7 @@ public class    MainActivity extends AppCompatActivity {
         processingRS = new ProcessingRS();
     }
 
+    // Fonction qui permet de load les seekbars pour être plus efficace (éviter la redondance)
     public void seekbars_load(boolean visible1, String text1, int maxVal1, boolean visible2, String text2, int maxVal2, boolean visible3, String text3, int maxVal3) {
         TextView t1 = slider_bars.findViewById(R.id.textView1), t2 = slider_bars.findViewById(R.id.textView2), t3 = slider_bars.findViewById(R.id.textView3);
         bar1.setVisibility(visible1 ? View.VISIBLE : View.INVISIBLE);
@@ -147,6 +150,11 @@ public class    MainActivity extends AppCompatActivity {
             case HUE:
                 processedBmp = currentBmp.copy(currentBmp.getConfig(), true);
                 Processing.colorize(processedBmp,bar1.getProgress());
+                break;
+            case KEEP_COLOR:
+                processedBmp = currentBmp.copy(currentBmp.getConfig(),true);
+                Processing.keepColor(processedBmp,bar1.getProgress(),bar2.getProgress());
+
         }
         imageView.setImageBitmap(processedBmp);
     }
@@ -165,6 +173,13 @@ public class    MainActivity extends AppCompatActivity {
                 currentProcessing = Processing_type.HUE;
                 seekbars_load(true,"Hue",359,false,"",1,false, "",1);
                 break;
+            case R.id.chromaKey_button:
+                currentProcessing = Processing_type.KEEP_COLOR;
+                seekbars_load(true,"Hue",359,true,"Chroma Key",180,false,"",1);
+                break;
+            case R.id.convolution_button:
+                currentProcessing = Processing_type.CONVOLUTION;
+                //seekbars_load();
         }
         applyProcessings();
 
@@ -172,4 +187,14 @@ public class    MainActivity extends AppCompatActivity {
         buttonslayout.removeAllViews();
         buttonslayout.addView(slider_bars);
     }
+
+    public void onClickSettings(View v) {
+        switch (v.getId()) {
+            case R.id.backButton:
+                currentProcessing = null;
+                buttonslayout.removeAllViews();
+                buttonslayout.addView(button_slide);
+        }
+    }
+
 }

@@ -27,18 +27,28 @@
                     android:text="@string/toGray_string" />
 
                 <Button
-                    android:id="@+id/colorize_button"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="@string/colorize_string" />
-
-                <Button
                     android:id="@+id/hue_button"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:onClick="onClickProcessings"
                     android:text="@string/hue_string" />
+
+                <Button
+                    android:id="@+id/chromaKey_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onClickProcessings"
+                    android:text="@string/chromaKey_string" />
+
+                <Button
+                    android:id="@+id/convolution_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onClickProcessings"
+                    android:text="@string/convolution_string" />
 
             </LinearLayout>
         </HorizontalScrollView>

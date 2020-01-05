@@ -53,4 +53,58 @@ public class Processing {
         bmp.setPixels(tmpCopy, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
     }
 
+    public static void keepColor(Bitmap bmp, float hue, float chromakey) {
+        hue = hue % 360f;
+        chromakey = chromakey % 180f;
+        int[] tmpCopy = new int[bmp.getWidth() * bmp.getHeight()];
+        bmp.getPixels(tmpCopy, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+
+        for (int i = 0; i < tmpCopy.length; i++) {
+            int currentPixel = tmpCopy[i];
+            float[] hsvValues = new float[3];
+            Utils.RGBToHSV(Color.red(currentPixel), Color.green(currentPixel), Color.blue(currentPixel), hsvValues);
+            float diff = Math.abs(hsvValues[0] - hue);
+            if (!(Math.min(diff, 360 - diff) <= chromakey)) {
+                hsvValues[1] = 0;
+            }
+            tmpCopy[i] = Utils.HSVToColor(hsvValues, Color.alpha(currentPixel));
+        }
+        bmp.setPixels(tmpCopy, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+    }
+
+    public static void convolution(Bitmap bmp, int dimension) {
+
+        int red;
+        int green;
+        int blue;
+
+        if (dimension%2 == 0)
+        {
+            return;
+        }
+
+        int multiplier = dimension * dimension;
+        int halfrange = (dimension/2) - 1;
+
+        int[] pixels = new int[bmp.getWidth()*bmp.getHeight()];
+        int[] tmpPix = pixels.clone();
+
+        bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+        for (int x = 0 + halfrange; x < bmp.getWidth()-halfrange; x++){
+            for (int y = 0 + halfrange; y < bmp.getHeight()-halfrange; y++) {
+                red = 0;
+                green = 0;
+                blue = 0;
+                for (int i = x-halfrange; i < x+halfrange; i++) {
+                    for (int j = y-halfrange; i < y+halfrange; j++){
+                        red += Color.red(pixels[i+j*bmp.getHeight()]);
+                        green += Color.green(pixels[i+j*bmp.getHeight()]);
+                        blue += Color.blue(pixels[i+j*bmp.getHeight()]);
+                    }
+                }
+                tmpPix[x+y*bmp.getHeight()] /= dimension;
+            }
+        }
+        bmp.setPixels(tmpPix, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+    }
 }
