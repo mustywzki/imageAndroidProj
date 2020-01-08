@@ -27,7 +27,7 @@
         android:contentDescription="@android:string/ok"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sizeText"
-        android:src="@drawable/imageé" />
+        android:src="@drawable/image" />
 
     <Button
         android:id="@+id/reset_button"
