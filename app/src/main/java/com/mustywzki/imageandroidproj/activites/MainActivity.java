@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.mustywzki.imageandroidproj.R;
 import com.mustywzki.imageandroidproj.algorithms.Processing;
 import com.mustywzki.imageandroidproj.algorithms.ProcessingRS;
+import com.mustywzki.imageandroidproj.algorithms.Utils;
 
 public class    MainActivity extends AppCompatActivity {
 
@@ -21,7 +22,9 @@ public class    MainActivity extends AppCompatActivity {
         GRAY,
         HUE,
         KEEP_COLOR,
-        CONVOLUTION
+        CONVOLUTION,
+        DYNAMIC_LINEAR,
+        HISTOGRAM_EQUALIZER
     }
 
     private Processing_type currentProcessing;
@@ -32,6 +35,7 @@ public class    MainActivity extends AppCompatActivity {
     private View slider_bars;
     private TextView sizetext;
     private ImageView imageView;
+    private Bitmap savedBmp;
     private Bitmap currentBmp;
     private Bitmap processedBmp;
 
@@ -48,6 +52,7 @@ public class    MainActivity extends AppCompatActivity {
 
         imageView = findViewById(R.id.imageView);
         currentBmp = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+        savedBmp = currentBmp;
 
         // User Interface Initialization
         buttonslayout = findViewById(R.id.buttonsLayout);
@@ -154,7 +159,18 @@ public class    MainActivity extends AppCompatActivity {
             case KEEP_COLOR:
                 processedBmp = currentBmp.copy(currentBmp.getConfig(),true);
                 Processing.keepColor(processedBmp,bar1.getProgress(),bar2.getProgress());
-
+                break;
+            case CONVOLUTION:
+                processedBmp = currentBmp.copy(currentBmp.getConfig(), true);
+                Processing.convolution(processedBmp,bar1.getProgress());
+                break;
+            case DYNAMIC_LINEAR:
+                processedBmp = currentBmp.copy(currentBmp.getConfig(), true);
+                Processing.computeDynamicLinearExtension(Utils.getHistogram(processedBmp),processedBmp);
+                break;
+            case HISTOGRAM_EQUALIZER:
+                processedBmp = currentBmp.copy(currentBmp.getConfig(),true);
+                Processing.histogramEqualizer(Utils.getHistogram(processedBmp),processedBmp);
         }
         imageView.setImageBitmap(processedBmp);
     }
@@ -179,7 +195,17 @@ public class    MainActivity extends AppCompatActivity {
                 break;
             case R.id.convolution_button:
                 currentProcessing = Processing_type.CONVOLUTION;
-                //seekbars_load();
+                seekbars_load(true,"Range",128,false,"",1,false,"",1);
+                bar1.setProgress(64);
+                break;
+            case R.id.dynamicLinear_button:
+                currentProcessing = Processing_type.DYNAMIC_LINEAR;
+                seekbars_load(false,"",1,false,"",1,false,"",1);
+                break;
+            case R.id.histequalizer_button:
+                currentProcessing = Processing_type.HISTOGRAM_EQUALIZER;
+                seekbars_load(false,"",1,false,"",1,false,"",1);
+                break;
         }
         applyProcessings();
 
@@ -188,10 +214,19 @@ public class    MainActivity extends AppCompatActivity {
         buttonslayout.addView(slider_bars);
     }
 
+    public void onClickReset(View v){
+        if (v.getId() == R.id.reset_button){
+            currentBmp = savedBmp;
+            processedBmp = savedBmp;
+            imageView.setImageBitmap(savedBmp);
+        }
+    }
+
     public void onClickSettings(View v) {
         switch (v.getId()) {
             case R.id.backButton:
                 currentProcessing = null;
+                currentBmp = processedBmp;
                 buttonslayout.removeAllViews();
                 buttonslayout.addView(button_slide);
         }

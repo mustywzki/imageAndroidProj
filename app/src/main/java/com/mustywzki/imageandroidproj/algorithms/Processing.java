@@ -107,4 +107,55 @@ public class Processing {
         }
         bmp.setPixels(tmpPix, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
     }
+
+    public static void computeDynamicLinearExtension(int[] histogram, Bitmap bmp){
+        int i = 0;
+        int min, max;
+        while (histogram[i] == 0)
+        {
+            i++;
+        }
+        min = i;
+
+        i = histogram.length - 1;
+        while (histogram[i] == 0){
+            i--;
+        }
+
+        max = i;
+
+        if (max == min){
+            return;
+        }
+
+        int[] LUT = new int[histogram.length]; //LOOK UP TABLE
+            for(int ng = 0; ng < histogram.length; ng++){
+            LUT[ng] = (255*(ng- min))/(max-min);
+        }
+
+        int[] pixels = new int[bmp.getWidth()*bmp.getHeight()];
+        bmp.getPixels(pixels,0,bmp.getWidth(),0,0,bmp.getWidth(),bmp.getHeight());
+
+        for (i = 0; i < bmp.getWidth()*bmp.getHeight();i++){
+            int px = pixels[i];
+            int gray = (int) (0.3 * (double) Color.red(px) + 0.59 * (double) Color.blue(px) + 0.11 * (double) Color.green(px));
+            gray = LUT[gray];
+            pixels[i] = Color.argb(Color.alpha(px), gray, gray, gray);
+        }
+        bmp.setPixels(pixels,0,bmp.getWidth(),0,0,bmp.getWidth(),bmp.getHeight());
+    }
+
+    public static void histogramEqualizer(int[] hist, Bitmap bmp){
+        int[] cumulativeHist;
+        cumulativeHist = Utils.cumulativeHistogram(hist);
+
+        int[] pixels = new int[bmp.getWidth()*bmp.getHeight()];
+        bmp.getPixels(pixels,0,bmp.getWidth(),0,0,bmp.getWidth(),bmp.getHeight());
+
+        for (int i = 0; i < bmp.getHeight()*bmp.getWidth(); i++){
+            pixels[i] = (cumulativeHist[i]*255)/(bmp.getWidth()*bmp.getHeight());
+        }
+        bmp.setPixels(pixels,0,bmp.getWidth(),0,0,bmp.getWidth(),bmp.getHeight());
+    }
+
 }

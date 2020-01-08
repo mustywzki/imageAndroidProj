@@ -50,6 +50,22 @@
                     android:onClick="onClickProcessings"
                     android:text="@string/convolution_string" />
 
+                <Button
+                    android:id="@+id/dynamicLinear_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onClickProcessings"
+                    android:text="@string/dynamicLinear_string" />
+
+                <Button
+                    android:id="@+id/histequalizer_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:onClick="onClickProcessings"
+                    android:text="@string/histequalizer_string" />
+
             </LinearLayout>
         </HorizontalScrollView>
 

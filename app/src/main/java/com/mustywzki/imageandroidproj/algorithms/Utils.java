@@ -1,5 +1,6 @@
 package com.mustywzki.imageandroidproj.algorithms;
 
+import android.graphics.Bitmap;
 import android.graphics.Color;
 
 public class Utils {
@@ -74,5 +75,26 @@ public class Utils {
 
     }
 
+    public static int[] getHistogram(Bitmap bmp) {
+        int[] hist = new int[256];
+        int[] tmpCopy = new int[bmp.getWidth() * bmp.getHeight()];
+        bmp.getPixels(tmpCopy, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
+        for (int i = 0; i < tmpCopy.length; i++) {
+            int px = tmpCopy[i];
+            float[] hsv = new float[3];
+            Utils.RGBToHSV(Color.red(px), Color.green(px), Color.blue(px), hsv);
+            hist[(int) (hsv[2] * 255f)]++;
+        }
+        return hist;
+    }
+
+    public static int[] cumulativeHistogram(int[] hist){
+        int[] C = new int[256];
+        C[0] = hist[0];
+        for (int k = 1; k < hist.length; k++){
+            C[k] = hist[k] + C[k-1];
+        }
+        return C;
+    }
 
 }

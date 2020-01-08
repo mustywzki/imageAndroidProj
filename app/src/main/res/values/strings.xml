@@ -5,4 +5,7 @@
     <string name="hue_string">Hue</string>
     <string name="Back">Back</string>
     <string name="convolution_string">Convolution</string>
+    <string name="dynamicLinear_string">Dynamic Linear Ext</string>
+    <string name="reset_string">Reset</string>
+    <string name="histequalizer_string">Histogram Equalizer</string>
 </resources>
