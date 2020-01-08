@@ -2,12 +2,6 @@ package com.mustywzki.imageandroidproj.algorithms;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.renderscript.RenderScript;
-
-import androidx.renderscript.Allocation;
-import androidx.renderscript.ScriptC;
-
-import com.mustywzki.imageandroidproj.ScriptC_gray;
 
 public class Processing {
 
@@ -48,7 +42,7 @@ public class Processing {
             float[] hsv = new float[3];
             Utils.RGBToHSV(Color.red(currentPixel), Color.green(currentPixel), Color.blue(currentPixel), hsv); // Getting HSV values for the currentPixel
             hsv[0] = hue; // setting up the new hue selected
-            tmpCopy[i] = Utils.HSVToColor(hsv, Color.alpha(currentPixel)); // Setting the HSV values back to RGB in order to set the modified pixel
+            tmpCopy[i] = Utils.HSVToRGB(hsv, Color.alpha(currentPixel)); // Setting the HSV values back to RGB in order to set the modified pixel
         }
         bmp.setPixels(tmpCopy, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
     }
@@ -67,7 +61,7 @@ public class Processing {
             if (!(Math.min(diff, 360 - diff) <= chromakey)) {
                 hsvValues[1] = 0;
             }
-            tmpCopy[i] = Utils.HSVToColor(hsvValues, Color.alpha(currentPixel));
+            tmpCopy[i] = Utils.HSVToRGB(hsvValues, Color.alpha(currentPixel));
         }
         bmp.setPixels(tmpCopy, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
     }

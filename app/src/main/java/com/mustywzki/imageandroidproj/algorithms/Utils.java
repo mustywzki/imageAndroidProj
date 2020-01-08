@@ -5,7 +5,7 @@ import android.graphics.Color;
 
 public class Utils {
 
-    public static int HSVToColor(float[] hsv, int alpha) {
+    public static int HSVToRGB(float[] hsv, int alpha) {
         int t = (int) ((hsv[0] / 60f) % 6);
         float C = hsv[1] * hsv[2];
         float X = C * (1 - Math.abs(((hsv[0] / 60) % 2) - 1));
