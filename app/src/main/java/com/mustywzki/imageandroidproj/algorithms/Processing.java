@@ -77,8 +77,8 @@ public class Processing {
             return;
         }
 
-        int multiplier = dimension * dimension;
-        int halfrange = (dimension/2) - 1;
+        int multiplier = dimension*dimension;
+        int halfrange = dimension/2;
 
         int[] pixels = new int[bmp.getWidth()*bmp.getHeight()];
         int[] tmpPix = pixels.clone();
@@ -89,14 +89,18 @@ public class Processing {
                 red = 0;
                 green = 0;
                 blue = 0;
-                for (int i = x-halfrange; i < x+halfrange; i++) {
-                    for (int j = y-halfrange; i < y+halfrange; j++){
+                for (int i = x-halfrange; i <= x+halfrange; i++) {
+                    for (int j = y-halfrange; i <= y+halfrange; j++){
                         red += Color.red(pixels[i+j*bmp.getHeight()]);
                         green += Color.green(pixels[i+j*bmp.getHeight()]);
                         blue += Color.blue(pixels[i+j*bmp.getHeight()]);
                     }
                 }
-                tmpPix[x+y*bmp.getHeight()] /= dimension;
+                red /= multiplier;
+                green /= multiplier;
+                blue /= multiplier;
+
+                tmpPix[x+y*bmp.getHeight()] = Color.rgb(red,green,blue);
             }
         }
         bmp.setPixels(tmpPix, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
@@ -132,9 +136,10 @@ public class Processing {
 
         for (i = 0; i < bmp.getWidth()*bmp.getHeight();i++){
             int px = pixels[i];
-            int gray = (int) (0.3 * (double) Color.red(px) + 0.59 * (double) Color.blue(px) + 0.11 * (double) Color.green(px));
-            gray = LUT[gray];
-            pixels[i] = Color.argb(Color.alpha(px), gray, gray, gray);
+            float[] hsv = new float[3];
+            Utils.RGBToHSV(Color.red(px), Color.green(px), Color.blue(px), hsv);
+            hsv[2] = (float) LUT[(int) (hsv[2] * 255f)] / 255f;
+            pixels[i] = Utils.HSVToRGB(hsv, Color.alpha(px));
         }
         bmp.setPixels(pixels,0,bmp.getWidth(),0,0,bmp.getWidth(),bmp.getHeight());
     }
@@ -147,7 +152,11 @@ public class Processing {
         bmp.getPixels(pixels,0,bmp.getWidth(),0,0,bmp.getWidth(),bmp.getHeight());
 
         for (int i = 0; i < bmp.getHeight()*bmp.getWidth(); i++){
-            pixels[i] = (cumulativeHist[i]*255)/(bmp.getWidth()*bmp.getHeight());
+            int px = pixels[i];
+            float[] hsv = new float[3];
+            Utils.RGBToHSV(Color.red(px), Color.green(px), Color.blue(px), hsv);
+            hsv[2] = (float) (cumulativeHist[(int) (hsv[2] * 255f)] * 255 / pixels.length) / 255f;
+            pixels[i] = Utils.HSVToRGB(hsv, Color.alpha(px));
         }
         bmp.setPixels(pixels,0,bmp.getWidth(),0,0,bmp.getWidth(),bmp.getHeight());
     }
